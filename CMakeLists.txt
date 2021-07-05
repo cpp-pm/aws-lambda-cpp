@@ -7,6 +7,12 @@ project(aws-lambda-runtime
 option(ENABLE_LTO "Enables link-time optimization, requires compiler support." ON)
 option(ENABLE_TESTS "Enables building the test project, requires AWS C++ SDK." OFF)
 
+include("cmake/HunterGate.cmake")
+HunterGate(
+    URL "https://github.com/cpp-pm/hunter/archive/v0.23.300.tar.gz"
+    SHA1 "1151d539465d9cdbc880ee30f794864aec11c448"
+)
+
 add_library(${PROJECT_NAME}
     "src/logging.cpp"
     "src/runtime.cpp"
@@ -32,6 +38,7 @@ if (ENABLE_LTO)
     endif()
 endif()
 
+hunter_add_package(CURL)
 find_package(CURL REQUIRED)
 if (CMAKE_VERSION VERSION_LESS 3.12)
     target_link_libraries(${PROJECT_NAME} PRIVATE ${CURL_LIBRARIES})
